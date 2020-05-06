@@ -22,6 +22,7 @@
 		<mkdir dir="deploy-sf"/>
 		<echo message="Current GIT Commit %GIT_COMMIT%"/>
 		<echo>Previous Known Successful GIT Commit :${GIT_PREVIOUS_SUCCESSFUL_COMMIT}</echo>
+		<gitDiff/>
 		<for list="${git.diff}" param="currentDiff" delimiter="${line.separator}">
 			<sequential>
 				<if>
