@@ -10,8 +10,8 @@
 			<arg value="diff" />
 			<arg value="--pretty=format:" />
 			<arg value="--name-only" />
-			<arg value="${env.GIT_COMMIT}" />
-			<arg value="${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}" />
+			<arg value="${env-vars.GIT_COMMIT}" />
+			<arg value="${env-vars.GIT_PREVIOUS_SUCCESSFUL_COMMIT}" />
 		</exec>
 		<echo>${git.diff}</echo>
 	</sequential>
@@ -20,8 +20,8 @@
 <target name="diffBuilderWithGitCommit">
 	<delete dir="deploy-sf"/>
 	<mkdir dir="deploy-sf"/>
-	<echo>Current GIT Commit :$.GIT_COMMIT </echo>
-	<echo>Previous Known Successful GIT Commit : %GIT_PREVIOUS_SUCCESSFUL_COMMIT%</echo>
+	<echo>Current GIT Commit :$GIT_COMMIT </echo>
+	<echo>Previous Known Successful GIT Commit</echo>
 	<gitDiff/>
 	<for list="${git.diff}" param="currentDiff" delimiter="${line.separator}">
 		<sequential>
