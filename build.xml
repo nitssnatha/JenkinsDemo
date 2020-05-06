@@ -20,7 +20,7 @@
 	<target name="diffBuilderWithGitCommit">
 		<delete dir="deploy-sf"/>
 		<mkdir dir="deploy-sf"/>
-		<echo message: 'Current GIT Commit :${GIT_COMMIT}' />
+		<echo message="Current GIT Commit :${GIT_COMMIT}"/>
 		<echo>Previous Known Successful GIT Commit</echo>
 		<gitDiff/>
 		<for list="${git.diff}" param="currentDiff" delimiter="${line.separator}">
