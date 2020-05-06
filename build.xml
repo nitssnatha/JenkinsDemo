@@ -20,8 +20,8 @@
 <target name="diffBuilderWithGitCommit">
 	<delete dir="deploy-sf"/>
 	<mkdir dir="deploy-sf"/>
-	<echo>Current GIT Commit : ${env.GIT_COMMIT}</echo>
-	<echo>Previous Known Successful GIT Commit : ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}</echo>
+	<echo>Current GIT Commit : %{env.GIT_COMMIT}</echo>
+	<echo>Previous Known Successful GIT Commit : %{env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}</echo>
 	<gitDiff/>
 	<for list="${git.diff}" param="currentDiff" delimiter="${line.separator}">
 		<sequential>
@@ -32,7 +32,7 @@
 				</and>
 				<then>
 					<propertyregex property="currentDiffWithoutSRC" input="@{currentDiff}" regexp="force-app\/([a-zA-Z$]*\/[a-zA-Z0-9\/\.\_-]*)" select="\1" casesensitive="true" override="true" defaultValue=""/>
-					<echo>Current Component : ${currentDiffWithoutSRC}</echo>
+					<echo>Current Component : %{currentDiffWithoutSRC}</echo>
 					<copy todir="deploy-sf" verbose="false">
 						<fileset dir="force-app">
 							<include name="${currentDiffWithoutSRC}" />
