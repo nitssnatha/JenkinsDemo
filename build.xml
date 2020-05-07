@@ -19,7 +19,6 @@
 	</macrodef>
 
 	<target name="diffBuilderWithGitCommit">
-		<delete dir="deploy-sf"/>
 		<mkdir dir="deploy-sf"/>
 		<echo>Current commit is ${env.GIT_COMMIT}</echo>
 		<echo>Previous Known Successful GIT Commit ${env.GIT_PREVIOUS_SUCCESSFUL_COMMIT}</echo>
