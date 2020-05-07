@@ -20,38 +20,39 @@
 	<target name="diffBuilderWithGitCommit">
 		<delete dir="deploy-sf"/>
 		<mkdir dir="deploy-sf"/>
-		<echo message="Current GIT Commit %GIT_COMMIT%"/>
-		<echo>Previous Known Successful GIT Commit :${GIT_PREVIOUS_SUCCESSFUL_COMMIT}</echo>
-		<gitDiff/>
-		<for list="${git.diff}" param="currentDiff" delimiter="${line.separator}">
-			<sequential>
-				<if>
-					<and>
-						<available file="@{currentDiff}"/>
-						<matches string="@{currentDiff}" pattern="force-app/"/>
-					</and>
-					<then>
-						<propertyregex property="currentDiffWithoutSRC" input="@{currentDiff}" regexp="force-app\/([a-zA-Z$]*\/[a-zA-Z0-9\/\.\_-]*)" select="\1" casesensitive="true" override="true" defaultValue=""/>
-						<echo>Current Component : ${currentDiffWithoutSRC}</echo>
-						<copy todir="deploy-sf" verbose="false">
-							<fileset dir="force-app">
-								<include name="${currentDiffWithoutSRC}" />
-							</fileset>
-						</copy>
-						<if>
-							<available file="@{currentDiff}-meta.xml"/>
-							<then>
-								<echo>Generating meta-xml : @{currentDiff}</echo>
-								<copy todir="deploy-sf" verbose="false">
-									<fileset dir="force-app">
-										<include name="${currentDiffWithoutSRC}-meta.xml" />
-									</fileset>
-								</copy>
-							</then>
-						</if>
-					</then>
-				</if>
-			</sequential>
-		</for>
-	</target>
-</project>
+		<echo message="Current GIT Commit"/>
+		<echo message="${GIT_COMMIT}">
+			<echo>Previous Known Successful GIT Commit :${GIT_PREVIOUS_SUCCESSFUL_COMMIT}</echo>
+			<gitDiff/>
+			<for list="${git.diff}" param="currentDiff" delimiter="${line.separator}">
+				<sequential>
+					<if>
+						<and>
+							<available file="@{currentDiff}"/>
+							<matches string="@{currentDiff}" pattern="force-app/"/>
+						</and>
+						<then>
+							<propertyregex property="currentDiffWithoutSRC" input="@{currentDiff}" regexp="force-app\/([a-zA-Z$]*\/[a-zA-Z0-9\/\.\_-]*)" select="\1" casesensitive="true" override="true" defaultValue=""/>
+							<echo>Current Component : ${currentDiffWithoutSRC}</echo>
+							<copy todir="deploy-sf" verbose="false">
+								<fileset dir="force-app">
+									<include name="${currentDiffWithoutSRC}" />
+								</fileset>
+							</copy>
+							<if>
+								<available file="@{currentDiff}-meta.xml"/>
+								<then>
+									<echo>Generating meta-xml : @{currentDiff}</echo>
+									<copy todir="deploy-sf" verbose="false">
+										<fileset dir="force-app">
+											<include name="${currentDiffWithoutSRC}-meta.xml" />
+										</fileset>
+									</copy>
+								</then>
+							</if>
+						</then>
+					</if>
+				</sequential>
+			</for>
+		</target>
+	</project>
