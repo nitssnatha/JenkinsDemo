@@ -4,9 +4,10 @@
 			<pathelement location="lib/ant-contrib-1.0b3.jar"/>
 		</classpath>
 	</taskdef>
+	<property environment="env"/>
 	<macrodef name="gitDiff">
 		<sequential>
-			<exec executable="git" outputproperty="git.diff" environment='env'>
+			<exec executable="git" outputproperty="git.diff">
 				<arg value="diff" />
 				<arg value="--pretty=format:" />
 				<arg value="--name-only" />
