@@ -22,4 +22,5 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Run Validation against SIT
-        run: sfdx force:source:deploy --sourcepath force-app/main/default --checkonly --testlevel NoTestRun --targetalias SIT
+        run: force:auth:sfdxurl:store --sfdxurlfile=./SF_ORG__SIT__AUTH_URL.txt --setalias=DevHub --setdefaultdevhubusername
+        run: sfdx force:source:deploy --sourcepath force-app/main/default --checkonly --testlevel NoTestRun --targetusername DevHub
