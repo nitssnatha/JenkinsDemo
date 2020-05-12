@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: SIT Branch Workflow
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [SIT]
+    paths:
+      - "force-app/**"
+
+env:
+  ADX_REFRESH_TOKEN: ${{ secrets.ADX_REFRESH_TOKEN }}
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+  SF_ORG__SIT__AUTH_URL: ${{ secrets.SF_ORG__SIT__AUTH_URL }}
+  SF_ORG__UAT__AUTH_URL: ${{ secrets.SF_ORG__UAT__AUTH_URL }}
+
+jobs:
+  Deploy_To_SIT:
+    runs-on: ubuntu-latest
+    container:
+      image: appirio/dx-salesforce:latest
+      options: --user 0:0
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Run Deployment against SIT
+        run: adx deploy:source --sourcepath force-app/main/default --testlevel NoTestRun --targetalias SIT
+
+  Validate_Against_UAT:
+    needs: Deploy_To_SIT
+    runs-on: ubuntu-latest
+    container:
+      image: appirio/dx-salesforce:latest
+      options: --user 0:0
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Run Validation against UAT
+        run: adx deploy:source --sourcepath force-app/main/default --checkonly --testlevel NoTestRun --targetalias UAT

@@ -1,0 +1,44 @@
+name: Feature Branch Workflow
+
+on:
+  push:
+    branches:
+      - "feature/**"
+    paths:
+      - "force-app/**"
+
+env:
+  ADX_REFRESH_TOKEN: ${{ secrets.ADX_REFRESH_TOKEN }}
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+  SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
+  SF_ORG__SIT__AUTH_URL: ${{ secrets.SF_ORG__SIT__AUTH_URL }}
+
+jobs:
+  SonarQube_Publish:
+    runs-on: ubuntu-latest
+    container:
+      image: appirio/dx-salesforce:latest
+      options: --user 0:0
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Create SonarQube Files
+        env:
+          ADX_REFRESH_TOKEN: ${{ secrets.ADX_REFRESH_TOKEN }}
+        run: adx sonar:config
+
+      - name: Publish SonarQube Changes
+        run: sonar-scanner -Dsonar.sources=. -Dsonar.login=$SONAR_LOGIN -Dsonar.analysis.mode=publish
+
+  Validate_Against_SIT:
+    needs: SonarQube_Publish
+    runs-on: ubuntu-latest
+    container:
+      image: appirio/dx-salesforce:latest
+      options: --user 0:0
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Run Validation against SIT
+        run: adx deploy:source --sourcepath force-app/main/default --checkonly --testlevel NoTestRun --targetalias SIT
