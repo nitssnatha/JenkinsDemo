@@ -20,6 +20,8 @@ jobs:
       options: --user 0:0
     steps:
       - uses: actions/checkout@v1
+      - name: Build with Ant
+        run: ant -buildfile build.xml diffBuilderWithGitCommit
       - name: Authenticate against dev hub
         run: sfdx force:auth:sfdxurl:store --sfdxurlfile=./SF_ORG__SIT__AUTH_URL.txt --setalias=DevHub --setdefaultdevhubusername
       - name: Run Validation against SIT
